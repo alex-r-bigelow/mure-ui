@@ -1,0 +1,19 @@
+@import '../style/colors.scss';
+
+#docView {
+  overflow: auto;
+  border: 1px solid $separatorColor;
+  background-color: $pageBackground;
+  border-radius: 0.5em;
+
+  iframe {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    border: none;
+    overflow: scroll;
+    background-color: white;
+  }
+}

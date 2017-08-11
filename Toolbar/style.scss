@@ -1,0 +1,102 @@
+@import '../style/colors.scss';
+@import '../style/measurements.scss';
+
+nav.toolbar {
+  position: fixed;
+
+  background-color: rgba($darkPanelColor, 0.5);
+  border: 1px solid $Black;
+  box-shadow: 0 0 0.25em $Black;
+
+  li.button {
+    position: relative;
+    display: block;
+    width: $buttonSize;
+    height: $buttonSize;
+  }
+
+  &.top,
+  &.bottom {
+    height: calc(#{$buttonSize} + 2 * #{$buttonPadding});
+    left: 50%;
+    transform: translate(-50%, 0%);
+    max-width: 100%;
+    ul {
+      width: 100%;
+      flex-direction: row;
+      padding: $buttonPadding calc(#{$buttonPadding} / 2);
+      li.button {
+        margin: 0 calc(#{$buttonPadding} / 2);
+      }
+    }
+  }
+  &.top {
+    top: 0px;
+    border-bottom-left-radius: $borderRadius;
+    border-bottom-right-radius: $borderRadius;
+    ul li.button:hover label {
+      top: calc(#{$buttonSize} + 0.5em);
+      left: calc(#{$buttonSize / 2});
+      transform: translate(-50%, 0);
+    }
+  }
+  &.bottom {
+    bottom: 0px;
+    border-top-left-radius: $borderRadius;
+    border-top-right-radius: $borderRadius;
+    ul li.button:hover label {
+      bottom: calc(#{$buttonSize} + 0.5em);
+      left: calc(#{$buttonSize / 2});
+      transform: translate(-50%, 0);
+    }
+  }
+  &.left,
+  &.right {
+    width: calc(#{$buttonSize} + 2 * #{$buttonPadding});
+    top: 50%;
+    transform: translate(0%, -50%);
+    max-height: 100%;
+    ul {
+      height: 100%;
+      flex-direction: column;
+      padding: calc(#{$buttonPadding} / 2) $buttonPadding;
+      li.button {
+        margin: calc(#{$buttonPadding} / 2) 0;
+      }
+    }
+  }
+  &.left {
+    left: 0px;
+    border-top-right-radius: $borderRadius;
+    border-bottom-right-radius: $borderRadius;
+    ul li.button:hover label {
+      top: calc(#{$buttonSize / 2} - 0.9em);
+      left: calc(#{$buttonSize} + 1em);
+      transform: none;
+    }
+  }
+  &.right {
+    right: 0px;
+    border-top-left-radius: $borderRadius;
+    border-bottom-left-radius: $borderRadius;
+    ul li.button:hover label {
+      top: calc(#{$buttonSize / 2} - 0.9em);
+      right: calc(#{$buttonSize} + 1em);
+      transform: none;
+    }
+  }
+  &.floating {
+    border-radius: $borderRadius;
+    ul li.button:hover label {
+      top: calc(#{$buttonSize} + 0.5em);
+      left: calc(#{$buttonSize / 2});
+      transform: translate(-50%, 0);
+    }
+  }
+
+  ul {
+    display: flex;
+    margin: 0px;
+    list-style: none;
+  }
+}

@@ -1,0 +1,140 @@
+@import '../style/colors.scss';
+@import '../style/measurements.scss';
+
+.modalUnderlay {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  background-color: rgba($Grey, 0.8);
+}
+
+.modalContainer {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+
+  .modalBorder {
+    position: absolute;
+    background-color: $panelColor;
+    background: $backgroundGradient;
+    border: 1px solid $Black;
+    border-radius: $borderRadius;
+    box-shadow: 0 0 1em $Black;
+
+    .modal {
+      position: absolute;
+      left: 0em;
+      top: 0em;
+      bottom: 0em;
+      right: 0em;
+      padding: 2em;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+
+      .formContainer > div {
+        margin: 0.5em 0em;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+      }
+
+      .buttonContainer {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        .button {
+          margin-left: 1em;
+        }
+      }
+
+      /* UI overrides below */
+
+      hr {
+        height: 1px;
+        border: none;
+        background-color: $separatorColor;
+      }
+
+      .select-style {
+        padding: 0;
+        margin: 0;
+        border: 1px solid $separatorColor;
+        width: 4em;
+        height: 1.5em;
+        overflow: hidden;
+        position: relative;
+
+        &:after {
+          top: 50%;
+          right: 0.5em;
+          border: solid transparent;
+          content: " ";
+          height: 0;
+          width: 0;
+          position: absolute;
+          pointer-events: none;
+          border-color: rgba(0, 0, 0, 0);
+          border-top-color: #000000;
+          border-width: 5px;
+          margin-top: -2px;
+        }
+
+        select {
+          padding: 0 0.5em;
+          width: 100%;
+          height: 100%;
+          border: none;
+          box-shadow: none;
+          background-color: rgba($Black, 0.5);
+          color: $accentColor;
+          background-image: none;
+          -webkit-appearance: none;
+             -moz-appearance: none;
+                  appearance: none;
+          border-radius: 0px;
+          font-size: 1em;
+          font-family: 'Josefin Sans', sans-serif;
+
+          option {
+            min-height: 1em;
+          }
+
+          &:focus {
+            outline: none;
+          }
+        }
+      }
+
+      input {
+        font-size: 1em;
+        font-family: 'Josefin Sans', sans-serif;
+        border: 1px solid $separatorColor;
+        height: 1.3em;
+        color: $accentColor;
+        background-color: rgba($Black, 0.5);
+        padding: 0.2em 0.5em 0em 0.5em;
+        &:focus {
+          outline: none;
+        }
+      }
+
+      .button {
+        position: relative;
+        width: 4em;
+        height: 1.5em;
+        text-align: center;
+
+        a {
+          padding-top: 0.25em;
+          color: $accentColor;
+        }
+      }
+    }
+  }
+}
