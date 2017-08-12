@@ -4,13 +4,19 @@ var path = require('path');
 
 module.exports = {
   entry: {
-    'mure-ui.es': './index.js'
+    'mure-ui': './src/index.js'
   },
   devtool: 'source-map',
   output: {
     path: path.join(__dirname, 'build'),
-    filename: '[name].js'
+    filename: '[name].js',
+    library: 'mure-ui',
+    libraryTarget: 'umd'
   },
+  externals: [
+    'd3',
+    'uki'
+  ],
   module: {
     rules: [
       {

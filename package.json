@@ -2,9 +2,10 @@
   "name": "mure-ui",
   "version": "0.1.0",
   "description": "A library for common mure UI elements",
-  "jsnext:main": "build/mure-ui.es.js",
-  "esnext": "build/mure-ui.es.js",
-  "module": "build/mure-ui.es.js",
+  "main": "build/mure-ui.js",
+  "jsnext:main": "build/mure-ui.js",
+  "esnext": "build/mure-ui.js",
+  "module": "build/mure-ui.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "./node_modules/.bin/webpack"
