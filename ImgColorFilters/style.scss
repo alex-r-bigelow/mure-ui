@@ -1,0 +1,7 @@
+/*
+Function to get the ID of an SVG color-changing filter
+*/
+
+@function imgColorFilter($colorValue) {
+  @return url(#recolorImageTo + str-slice(inspect($colorValue), 2));
+}

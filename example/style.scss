@@ -1,0 +1,45 @@
+@import '../style/colors.scss';
+@import '../style/measurements.scss';
+@import '../style/buttons.scss';
+@import '../style/scrollbars.scss';
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  color: $textColor;
+  background-color: $pageBackground;
+}
+#backgroundGradient {
+  position: fixed;
+  top: -1em;
+  bottom: -1em;
+  left: -1em;
+  right: -1em;
+  background: $backgroundGradient;
+}
+
+#docView {
+  position: absolute;
+
+  /* settings for mobile */
+  top: calc(100vh - 6em);
+  right: 0em;
+  left: 4em;  /* leave 4em for a scrolling target */
+  bottom: calc(-100vh + 10em);
+  margin-bottom: 4em;
+}
+
+@media only screen and (min-width: 768px) {
+  /* overrides for desktop */
+  #docView {
+    right: 4em;
+    top: 4em;
+    bottom: 4em;
+    left: 500px;
+    margin-bottom: 0em;
+  }
+}

@@ -32,7 +32,8 @@ class NewFileDialog extends Dialog {
     this.okCallback = okCallback;
   }
   draw (d3el) {
-    d3el.style('width', '24em')
+    d3el.select('.modalBorder')
+      .style('width', '24em')
       .style('height', '18em')
       .style('left', 'calc(50% - 12em)')
       .style('top', 'calc(50% - 9em)');

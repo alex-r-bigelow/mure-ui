@@ -1,0 +1,76 @@
+@import './colors.scss';
+@import '../ImgColorFilters/style.scss';
+@import './measurements.scss';
+
+.button {
+  cursor: pointer;
+
+  a {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: -1px;
+    top: -1px;
+    border: 1px solid $Black;
+    border-radius: $borderRadius;
+    overflow: hidden;
+
+    background: linear-gradient(to bottom, rgba($lightPanelColor,0.1) 0%,rgba($panelColor,0) 40%,rgba($darkPanelColor,0.1) 100%);
+
+    img {
+      position: absolute;
+      left: calc(#{$buttonSize / 2} - #{$buttonImageSize / 2});
+      top: calc(#{$buttonSize / 2} - #{$buttonImageSize / 2});
+      width: $buttonImageSize;
+      height: $buttonImageSize;
+      filter: imgColorFilter($accentColor);
+    }
+  }
+  label {
+    display: none;
+  }
+
+  &:hover {
+    a {
+      background: linear-gradient(to bottom, rgba($lightPanelColor,0.5) 0%,rgba($panelColor,0.25) 40%,rgba($darkPanelColor,1) 100%);
+    }
+    label {
+      display: block;
+      position: absolute;
+      padding: 0.25em 0.5em;
+      border-radius: $borderRadius;
+      z-index: 100;
+
+      background-color: $darkPanelColor;
+      color: $accentColor;
+      white-space: nowrap;
+      border: 1px solid $Black;
+      box-shadow: 0 0 0.25em $darkPanelColor;
+
+      /* this label positioning gets overridden based on nav bar postion */
+      top: calc(#{$buttonSize} + 0.5em);
+      left: calc(#{$buttonSize / 2});
+      transform: translate(-50%, 0);
+    }
+  }
+  &:active {
+    a {
+      background: linear-gradient(to bottom, rgba($darkPanelColor,1) 0%,rgba($panelColor,0.25) 40%,rgba($lightPanelColor,0.5) 100%);
+    }
+  }
+
+  &.selected {
+    a {
+      background: linear-gradient(to bottom, desaturate($lightAccentColor,10) 0%, desaturate($accentColor,30) 40%, desaturate($darkAccentColor,10) 100%);
+      img {
+        filter: imgColorFilter($darkPanelColor);
+      }
+    }
+    &:hover a {
+      background: linear-gradient(to bottom, $lightAccentColor 0%, $accentColor 40%, $darkAccentColor 100%);
+    }
+    &:active a {
+      background: linear-gradient(to bottom, $darkAccentColor 0%, $accentColor 40%, $lightAccentColor 100%);
+    }
+  }
+}
