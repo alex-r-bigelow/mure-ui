@@ -52,21 +52,17 @@ class DocView extends View {
         }
       }
     }
-    iframe.attrs({
-      width: bounds.width,
-      height: bounds.height
-    });
+    iframe.attr('width', bounds.width)
+      .attr('height', bounds.height);
     // TODO: It's possible that bounds.width / bounds.height were something other than pixels,
     // e.g. '8.5in'... but the browser doesn't seem to size this correctly:
     bounds = iframeContent.getBoundingClientRect();
     let leftRightMargin = bounds.width < previewBounds.width ? 'auto' : null;
     let topBottomMargin = bounds.height < previewBounds.height ? 'auto' : null;
-    iframe.styles({
-      'margin-left': leftRightMargin,
-      'margin-right': leftRightMargin,
-      'margin-top': topBottomMargin,
-      'margin-bottom': topBottomMargin
-    });
+    iframe.style('margin-left', leftRightMargin)
+      .style('margin-right', leftRightMargin)
+      .style('margin-top', topBottomMargin)
+      .style('margin-bottom', topBottomMargin);
   }
 
   renderFile (d3el, currentFileBlob) {

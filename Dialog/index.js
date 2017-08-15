@@ -32,12 +32,10 @@ class NewFileDialog extends Dialog {
     this.okCallback = okCallback;
   }
   draw (d3el) {
-    d3el.select('.modalBorder').styles({
-      'width': '24em',
-      'height': '18em',
-      'left': 'calc(50% - 12em)',
-      'top': 'calc(50% - 9em)'
-    });
+    d3el.style('width', '24em')
+      .style('height', '18em')
+      .style('left', 'calc(50% - 12em)')
+      .style('top', 'calc(50% - 9em)');
 
     let modal = d3el.select('.modal');
     modal.html(newFileDialogTemplate);
