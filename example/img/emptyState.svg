@@ -10,6 +10,7 @@
 	.st4{font-size:24px;}
 	.st5{enable-background:new    ;}
 	.st6{font-family:'JosefinSans-Bold';}
+  .st7{cursor:pointer}
 </style>
 <g>
 	<polygon class="st0" points="417.7,93.2 403.6,109.9 417.7,126.6 431.8,109.9 	"/>
@@ -34,5 +35,10 @@
 	<polygon class="st2" points="190.3,189 164.3,219.9 190.3,250.7 216.3,219.9 	"/>
 </g>
 <text transform="matrix(1 0 0 1 288.1244 219.8629)" class="st3 st4">No file open.</text>
-<text transform="matrix(1 0 0 1 289.9462 465.6462)" class="st5"><tspan x="0" y="0" class="st3 st4">Looks like you need to</tspan><tspan x="-213.1" y="28.8" class="st1 st6 st4"><a href="/" target="_blank">create or open an SVG file</a></tspan><tspan x="46.4" y="28.8" class="st3 st4"> in the main app.</tspan></text>
+<text transform="matrix(1 0 0 1 289.9462 465.6462)" class="st5"><tspan x="0" y="0" class="st3 st4">Looks like you need to</tspan><tspan x="-213.1" y="28.8" class="st1 st6 st4"><a id="rootLink" class="st7">create or open an SVG file</a></tspan><tspan x="46.4" y="28.8" class="st3 st4"> in the main app.</tspan></text>
+<script type="text/javascript"><![CDATA[
+  document.getElementById('rootLink').onclick = function (e) {
+    window.parent.open(window.parent.location.origin + '/docs', '_blank');
+  };
+  ]]></script>
 </svg>
