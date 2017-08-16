@@ -1,3 +1,4 @@
+import mure from 'mure';
 import { View } from 'uki';
 import template from './template.html';
 import './style.scss';
@@ -32,5 +33,28 @@ class Toolbar extends View {
     });
   }
 }
+export { Toolbar };
 
-export default Toolbar;
+class AppToolbar extends Toolbar {
+  constructor () {
+    super([]);
+    this.menuData = this.buildAppMenu();
+  }
+  buildAppMenu () {
+    let appMenu = [];
+    Object.keys(mure.appList).forEach(appName => {
+      appMenu.push({
+        onclick: () => {
+          if (mure.currentApp !== appName) {
+            mure.openApp(appName);
+          }
+        },
+        label: appName === 'docs' ? 'Main app' : 'docs',
+        icon: mure.appList[appName].icon,
+        selected: mure.currentApp === appName
+      });
+    });
+    return appMenu;
+  }
+}
+export { AppToolbar };

@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 window.d3 = d3; // strap d3 to the window for debugging console access
-import { DocView, Toolbar, NewFileDialog, updateImgColorFilters } from '../index.js';
+import { DocView, Toolbar, AppToolbar, NewFileDialog, updateImgColorFilters } from '../index.js';
 import './style.scss';
 updateImgColorFilters();
 
@@ -30,11 +30,15 @@ let opsMenu = [
 ];
 
 let docView;
+let appMenu;
 let fileOpsMenu;
 
 function setup () {
   docView = new DocView(emptyState);
   docView.render(d3.select('#docView'));
+
+  appMenu = new AppToolbar();
+  appMenu.render(d3.select('#appMenu'));
 
   fileOpsMenu = new Toolbar(opsMenu);
   fileOpsMenu.render(d3.select('#fileOpsMenu'));
