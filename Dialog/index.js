@@ -27,8 +27,12 @@ class Dialog extends View {
 }
 
 class NewFileDialog extends Dialog {
-  constructor (okCallback) {
+  constructor (extension, options, okCallback) {
     super();
+    this.extension = extension;
+    // options is an array of { label: '', attrs: {} } objects;
+    // attrs sets each <input> fields' attributes, and id is required
+    this.options = options;
     this.okCallback = okCallback;
   }
   draw (d3el) {
@@ -41,19 +45,38 @@ class NewFileDialog extends Dialog {
     let modal = d3el.select('.modal');
     modal.html(newFileDialogTemplate);
 
-    let unitOptions = modal.selectAll('.units').selectAll('option')
-      .data(NewFileDialog.UNITS);
-    unitOptions.enter().append('option')
-      .attr('value', d => d)
-      .property('selected', d => d === 'px')
-      .text(d => d);
+    d3el.select('#extension').text(this.extension);
+    d3el.select('#extensionHeader').text(this.extension.trim('.').toUpperCase());
+
+    let options = d3el.select('.formContainer').selectAll('.option')
+      .data(this.options);
+    options.exit().remove();
+    let optionsEnter = options.enter().append('div')
+      .classed('option', true);
+    options = options.merge(optionsEnter);
+
+    optionsEnter.append('label');
+    options.select('label')
+      .attr('for', d => d.attrs.id)
+      .text(d => d.label || '');
+
+    optionsEnter.append('input');
+    options.select('input')
+      .each(function (d) {
+        let inputEl = d3.select(this);
+        Object.keys(d.attrs).forEach(attr => {
+          inputEl.attr(attr, d.attrs[attr]);
+        });
+      });
 
     d3el.select('#okButton').on('click', () => {
-      this.okCallback({
-        name: d3el.select('#filename').node().value,
-        width: d3el.select('#width').node().value, // + d3el.select('#widthUnit').node().value,
-        height: d3el.select('#height').node().value // + d3el.select('#heightUnit').node().value
+      let callbackObj = {
+        name: d3el.select('#filename').node().value + this.extension
+      };
+      this.options.forEach(option => {
+        callbackObj[option.attrs.id] = d3el.select('#' + option.attrs.id).node().value;
       });
+      this.okCallback(callbackObj);
       this.close(d3el);
     });
     d3el.select('#cancelButton').on('click', () => {

@@ -36,11 +36,16 @@
       flex-direction: column;
       justify-content: space-around;
 
+      #extension,
+      #extensionHeader {
+        display: inline;
+      }
+
       .formContainer > div {
         margin: 0.5em 0em;
         display: flex;
         flex-direction: row;
-        justify-content: space-around;
+        justify-content: space-between;
         align-items: center;
       }
 

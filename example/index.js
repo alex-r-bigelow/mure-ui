@@ -21,7 +21,25 @@ let opsMenu = [
     label: 'New File',
     icon: newFileIcon,
     onclick: () => {
-      new NewFileDialog(newFileSpecs => {
+      new NewFileDialog('.exe', [
+        {
+          label: 'A string',
+          attrs: {
+            value: 'default string value',
+            id: 'stringValue'
+          }
+        },
+        {
+          label: 'A number',
+          attrs: {
+            type: 'number',
+            min: 1,
+            value: 512,
+            id: 'numberValue'
+          }
+        }
+      ],
+      newFileSpecs => {
         console.log('Clicked the new file button!');
         console.log(newFileSpecs);
       }).render();
