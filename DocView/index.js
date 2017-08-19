@@ -15,13 +15,12 @@ class DocView extends View {
     d3el.html(template);
     d3el.select('iframe').on('load', () => { this.resizeIFrame(d3el); });
 
-    mure.on('fileChange', currentFileBlob => { this.renderFile(d3el, currentFileBlob); });
+    mure.on('fileChange', mureFile => { this.renderFile(d3el, mureFile.fileName); });
   }
 
   draw (d3el) {
-    mure.getCurrentFilename().then(filename => {
-      mure.getFile(filename).then(fileBlob => { this.renderFile(d3el, fileBlob); });
-    });
+    // TODO: show a spinner
+    mure.getCurrentFilename().then(filename => { this.renderFile(d3el, filename); });
   }
 
   resizeIFrame (d3el) {
@@ -65,11 +64,18 @@ class DocView extends View {
       .style('margin-bottom', topBottomMargin);
   }
 
-  renderFile (d3el, currentFileBlob) {
-    currentFileBlob = currentFileBlob || this.defaultBlob;
-    let iframe = d3el.select('iframe');
-    iframe.attr('src', window.URL.createObjectURL(currentFileBlob));
-    iframe.node().focus();
+  renderFile (d3el, filename) {
+    let blobPromise;
+    if (filename) {
+      blobPromise = mure.getFileBlob(filename);
+    } else {
+      blobPromise = Promise.resolve(this.defaultBlob);
+    }
+    blobPromise.then(blob => {
+      let iframe = d3el.select('iframe');
+      iframe.attr('src', window.URL.createObjectURL(blob));
+      iframe.node().focus();
+    });
   }
 }
 
