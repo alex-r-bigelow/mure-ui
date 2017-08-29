@@ -99,4 +99,14 @@ nav.toolbar {
     margin: 0px;
     list-style: none;
   }
+
+  &.newTab {
+    li.button {
+      cursor: alias;
+    }
+    li.button:hover,
+    li.button.active {
+      outline: 3px solid;
+    }
+  }
 }

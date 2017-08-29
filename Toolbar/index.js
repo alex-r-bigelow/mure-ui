@@ -1,3 +1,4 @@
+import * as d3 from 'd3';
 import mure from 'mure';
 import { View } from 'uki';
 import template from './template.html';
@@ -25,28 +26,87 @@ class Toolbar extends View {
       .classed('selected', d => d.selected);
     let menuItemLinks = menuItems.select('a');
 
-    menuItemLinks.select('img').attr('src', d => d.icon);
+    menuItemLinks.select('img')
+      .attr('src', d => d.icon)
+      .attr('draggable', false);
     menuItems.select('label').text(d => d.label);
 
-    menuItems.on('click', function (d) {
-      d.onclick.call(this, d);
+    menuItems.each(function (d) {
+      let menuItem = d3.select(this);
+      if (d.events) {
+        Object.keys(d.events).forEach(eventStr => {
+          menuItem.on(eventStr, function () {
+            d.events[eventStr].call(this, d);
+          });
+        });
+      }
     });
   }
 }
+
 export { Toolbar };
 
 class AppToolbar extends Toolbar {
   constructor () {
     super([]);
     this.menuData = this.buildAppMenu();
+    this.longPressTimeout;
+    this.longPressed = false;
+  }
+  toggleNewTabClass () {
+    let newTab = this.longPressed;
+    if (d3.event) {
+      newTab = newTab ||
+        d3.event.altKey ||
+        d3.event.ctrlKey ||
+        d3.event.metaKey ||
+        d3.event.shiftKey;
+    }
+    this.d3el.classed('newTab', newTab);
+  }
+  setup (d3el) {
+    super.setup(d3el);
+    d3.select(document)
+      .on('keydown', () => {
+        this.toggleNewTabClass();
+      })
+      .on('keyup', () => {
+        this.toggleNewTabClass();
+      });
   }
   buildAppMenu () {
     let appMenu = [];
     Object.keys(mure.appList).forEach(appName => {
       appMenu.push({
-        onclick: () => {
-          if (mure.currentApp !== appName) {
-            mure.openApp(appName);
+        events: {
+          mousedown: () => {
+            this.longPressed = false;
+            window.clearTimeout(this.longPressTimeout);
+            this.longPressTimeout = window.setTimeout(() => {
+              this.longPressed = true;
+              this.toggleNewTabClass();
+            }, 1000);
+          },
+          mouseup: () => {
+            let newTab = this.longPressed;
+            if (d3.event) {
+              newTab = newTab ||
+                d3.event.altKey ||
+                d3.event.ctrlKey ||
+                d3.event.metaKey ||
+                d3.event.shiftKey;
+            }
+            mure.openApp(appName, newTab);
+            this.longPressed = false;
+            this.toggleNewTabClass();
+          },
+          mouseover: () => {
+            this.toggleNewTabClass();
+          },
+          mouseout: () => {
+            window.clearTimeout(this.longPressTimeout);
+            this.longPressed = false;
+            this.toggleNewTabClass();
           }
         },
         label: appName === 'docs' ? 'Main app' : 'docs',
