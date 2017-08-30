@@ -5,10 +5,11 @@ import template from './template.html';
 import './style.scss';
 
 class DocView extends View {
-  constructor (defaultContents) {
+  constructor (defaultContents, enableInteractivity) {
     super();
 
     this.defaultBlob = new window.Blob([defaultContents], { type: 'image/svg+xml' });
+    this.enableInteractivity = !!enableInteractivity;
   }
 
   setup (d3el) {
@@ -67,12 +68,14 @@ class DocView extends View {
   renderFile (d3el, filename) {
     let blobPromise;
     if (filename) {
-      blobPromise = mure.getFileBlob(filename);
+      blobPromise = mure.getFileAsBlob(filename);
     } else {
       blobPromise = Promise.resolve(this.defaultBlob);
     }
     blobPromise.then(blob => {
       let iframe = d3el.select('iframe');
+      iframe.node().__suppressInteractivity__ = !this.enableInteractivity;
+      // give the loaded SVG a way to know that it should suppress interactivity if we say so
       iframe.attr('src', window.URL.createObjectURL(blob));
       iframe.node().focus();
     });
