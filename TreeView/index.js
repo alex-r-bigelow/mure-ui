@@ -134,9 +134,9 @@ class TreeView extends View {
                  'Q' + (1.5 * arrowRadius) + ',0,' +
                  '-' + arrowRadius + ',' + arrowRadius + 'Z');
     nodes.select('.arrow')
-      .style('display', d => this.isLeaf(d) ? 'none' : null)
+      .style('display', d => this.isLeaf(d.node) ? 'none' : null)
       .on('click', (d, i) => {
-        if (!this.isLeaf(d)) {
+        if (!this.isLeaf(d.node)) {
           if (d.numVisibleDescendants > 0) {
             this.collapse(i).catch(err => { throw err; });
           } else {
