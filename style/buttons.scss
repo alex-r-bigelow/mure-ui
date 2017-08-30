@@ -16,7 +16,7 @@
     border-radius: $borderRadius;
     overflow: hidden;
 
-    background: linear-gradient(to bottom, rgba($lightPanelColor,0.1) 0%,rgba($panelColor,0) 40%,rgba($darkPanelColor,0.1) 100%);
+    background: $buttonGradient;
 
     img {
       position: absolute;
@@ -33,7 +33,7 @@
 
   &:hover {
     a {
-      background: linear-gradient(to bottom, rgba($lightPanelColor,0.5) 0%,rgba($panelColor,0.25) 40%,rgba($darkPanelColor,1) 100%);
+      background: $buttonHoverGradient;
     }
     label {
       display: block;
@@ -56,22 +56,22 @@
   }
   &:active {
     a {
-      background: linear-gradient(to bottom, rgba($darkPanelColor,1) 0%,rgba($panelColor,0.25) 40%,rgba($lightPanelColor,0.5) 100%);
+      background: $buttonActiveGradient;
     }
   }
 
   &.selected {
     a {
-      background: linear-gradient(to bottom, desaturate($lightAccentColor,10) 0%, desaturate($accentColor,30) 40%, desaturate($darkAccentColor,10) 100%);
+      background: $selectedButtonGradient;
       img {
         filter: imgColorFilter($darkPanelColor);
       }
     }
     &:hover a {
-      background: linear-gradient(to bottom, $lightAccentColor 0%, $accentColor 40%, $darkAccentColor 100%);
+      background: $selectedButtonHoverGradient;
     }
     &:active a {
-      background: linear-gradient(to bottom, $darkAccentColor 0%, $accentColor 40%, $lightAccentColor 100%);
+      background: $selectedButtonActiveGradient;
     }
   }
 }

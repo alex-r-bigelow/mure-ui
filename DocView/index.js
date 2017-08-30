@@ -15,7 +15,7 @@ class DocView extends View {
     d3el.html(template);
     d3el.select('iframe').on('load', () => { this.resizeIFrame(d3el); });
 
-    mure.on('fileChange', mureFile => { this.renderFile(d3el, mureFile ? mureFile.fileName : null); });
+    mure.on('fileChange', mureFile => { this.renderFile(d3el, mureFile ? mureFile.filename : null); });
   }
 
   draw (d3el) {

@@ -35,7 +35,6 @@ Color meanings:
 */
 
 $pageBackground: darken($DarkPurple, 45%);
-$backgroundGradient: linear-gradient(-100deg, rgba(95,93,145,1) 0%,rgba(102,100,147,1) 23%,rgba(28,28,33,1) 100%);
 $textColor: $LightPurple;
 $separatorColor: $DarkGrey;
 
@@ -48,5 +47,24 @@ $lightAccentColor: $LightYellow;
 $darkAccentColor: darken($accentColor, 30%);
 
 $bindingColor: $DarkTeal;
-$encodingColor: $DarkPurple;
-$interactionColor: $DarkOrange;
+$encodingColor: $DarkOrange;
+$interactionColor: $DarkPink;
+
+/*
+Gradients:
+*/
+$backgroundGradient: linear-gradient(-100deg, rgba(95,93,145,1) 0%,rgba(102,100,147,1) 23%,rgba(28,28,33,1) 100%);
+
+$lightGradientStops: rgba($lightPanelColor,0.1) 0%,rgba($panelColor,0) 40%,rgba($darkPanelColor,0.1) 100%;
+$lightHoverGradientStops: rgba($lightPanelColor,0.5) 0%,rgba($panelColor,0.25) 40%,rgba($darkPanelColor,1) 100%;
+$lightActiveGradientStops: rgba($darkPanelColor,1) 0%,rgba($panelColor,0.25) 40%,rgba($lightPanelColor,0.5) 100%;
+$strongGradientStops: desaturate($lightAccentColor,10) 0%, desaturate($accentColor,30) 40%, desaturate($darkAccentColor,10) 100%;
+$strongHoverGradientStops: $lightAccentColor 0%, $accentColor 40%, $darkAccentColor 100%;
+$strongActiveGradientStops: $darkAccentColor 0%, $accentColor 40%, $lightAccentColor 100%;
+
+$buttonGradient: linear-gradient(to bottom, $lightGradientStops);
+$buttonHoverGradient: linear-gradient(to bottom, $lightHoverGradientStops);
+$buttonActiveGradient: linear-gradient(to bottom, $lightActiveGradientStops);
+$selectedButtonGradient: linear-gradient(to bottom, $strongGradientStops);
+$selectedButtonHoverGradient: linear-gradient(to bottom, $strongHoverGradientStops);
+$selectedButtonActiveGradient: linear-gradient(to bottom, $strongActiveGradientStops);

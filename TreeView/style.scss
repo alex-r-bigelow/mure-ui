@@ -1,0 +1,64 @@
+@import '../style/colors.scss';
+
+.treeView {
+  overflow: auto;
+  border: 1px solid $separatorColor;
+  background-color: $pageBackground;
+  border-radius: 0.5em;
+
+  #normalGradient {
+    .stop1 {
+      stop-color: desaturate($lightAccentColor,10);
+    }
+    .stop2 {
+      stop-color: desaturate($accentColor,30);
+    }
+    .stop3 {
+      stop-color: desaturate($darkAccentColor,10);
+    }
+  }
+  #hoverGradient {
+    .stop1 {
+      stop-color: $lightAccentColor;
+    }
+    .stop2 {
+      stop-color: $accentColor;
+    }
+    .stop3 {
+      stop-color: $darkAccentColor;
+    }
+  }
+  #activeGradient {
+    .stop1 {
+      stop-color: $darkAccentColor;
+    }
+    .stop2 {
+      stop-color: $accentColor;
+    }
+    .stop3 {
+      stop-color: $lightAccentColor;
+    }
+  }
+
+  .node {
+    .arrow {
+      cursor: pointer;
+      fill: url(#normalGradient);
+      stroke: black;
+      &:hover {
+        fill: url(#hoverGradient);
+      }
+      &:active {
+        fill: url(#activeGradient);
+      }
+    }
+
+    text {
+      fill: $textColor;
+    }
+
+    .underline {
+      stroke: $separatorColor;
+    }
+  }
+}
