@@ -2,7 +2,7 @@
 @import '../style/measurements.scss';
 
 nav.toolbar {
-  position: fixed;
+  position: absolute;
 
   background-color: rgba($darkPanelColor, 0.5);
   border: 1px solid $Black;
@@ -46,6 +46,7 @@ nav.toolbar {
     border-top-right-radius: $borderRadius;
     ul li.button:hover label {
       bottom: calc(#{$buttonSize} + 0.5em);
+      top: auto;
       left: calc(#{$buttonSize / 2});
       transform: translate(-50%, 0);
     }
@@ -82,6 +83,7 @@ nav.toolbar {
     ul li.button:hover label {
       top: calc(#{$buttonSize / 2} - 0.9em);
       right: calc(#{$buttonSize} + 1em);
+      left: auto;
       transform: none;
     }
   }

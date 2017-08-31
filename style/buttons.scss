@@ -3,6 +3,13 @@
 @import './measurements.scss';
 
 .button {
+  position: relative;
+  width: $buttonSize;
+  height: $buttonSize;
+
+  background: $darkPanelColor;
+  border-radius: $borderRadius;
+
   cursor: pointer;
   user-select: none;
 
@@ -14,7 +21,7 @@
     top: -1px;
     border: 1px solid $Black;
     border-radius: $borderRadius;
-    overflow: hidden;
+    // overflow: hidden;
 
     background: $buttonGradient;
 
@@ -48,10 +55,29 @@
       border: 1px solid $Black;
       box-shadow: 0 0 0.25em $darkPanelColor;
 
-      /* this label positioning gets overridden based on nav bar postion */
+      /* default position for label is on the bottom */
       top: calc(#{$buttonSize} + 0.5em);
       left: calc(#{$buttonSize / 2});
       transform: translate(-50%, 0);
+
+      /* label positioning can also be overridden when the button is in a toolbar */
+      &.top {
+        bottom: calc(#{$buttonSize} + 0.5em);
+        top: auto;
+        left: calc(#{$buttonSize / 2});
+        transform: translate(-50%, 0);
+      }
+      &.right {
+        top: calc(#{$buttonSize / 2} - 0.9em);
+        left: calc(#{$buttonSize} + 1em);
+        transform: none;
+      }
+      &.left {
+        top: calc(#{$buttonSize / 2} - 0.9em);
+        right: calc(#{$buttonSize} + 1em);
+        left: auto;
+        transform: none;
+      }
     }
   }
   &:active {
