@@ -14,14 +14,24 @@ class DocView extends View {
 
   setup (d3el) {
     d3el.html(template);
-    d3el.select('iframe').on('load', () => { this.resizeIFrame(d3el); });
+    d3el.select('iframe').on('load', () => {
+      this.resizeIFrame(d3el);
+    });
 
-    mure.on('fileChange', mureFile => { this.renderFile(d3el, mureFile ? mureFile.filename : null); });
+    mure.on('fileChange', mureFile => {
+      this.renderFile(d3el, mureFile ? mureFile.filename : null);
+    });
   }
 
   draw (d3el) {
     // TODO: show a spinner
-    mure.getCurrentFilename().then(filename => { this.renderFile(d3el, filename); });
+    (async () => {
+      let mureFile = await mure.getFile();
+      if (mureFile === null || this.lastFileRev !== mureFile._rev) {
+        await this.renderFile(d3el, mureFile.filename);
+      }
+      this.lastFileRev = mureFile ? mureFile._rev : null;
+    })();
   }
 
   resizeIFrame (d3el) {
@@ -66,20 +76,13 @@ class DocView extends View {
     return bounds;
   }
 
-  renderFile (d3el, filename) {
-    let blobPromise;
-    if (filename) {
-      blobPromise = mure.getFileAsBlob(filename);
-    } else {
-      blobPromise = Promise.resolve(this.defaultBlob);
-    }
-    blobPromise.then(blob => {
-      let iframe = d3el.select('iframe');
-      iframe.node().__suppressInteractivity__ = !this.enableInteractivity;
-      // give the loaded SVG a way to know that it should suppress interactivity if we say so
-      iframe.attr('src', window.URL.createObjectURL(blob));
-      iframe.node().focus();
-    });
+  async renderFile (d3el, filename) {
+    let blob = filename ? await mure.getFileAsBlob(filename) : this.defaultBlob;
+    let iframe = d3el.select('iframe');
+    iframe.node().__suppressInteractivity__ = !this.enableInteractivity;
+    // give the loaded SVG a way to know that it should suppress interactivity if we say so
+    iframe.attr('src', window.URL.createObjectURL(blob));
+    iframe.node().focus();
   }
 }
 
