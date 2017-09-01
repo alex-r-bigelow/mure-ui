@@ -63,6 +63,7 @@ class DocView extends View {
       .style('margin-right', leftRightMargin)
       .style('margin-top', topBottomMargin)
       .style('margin-bottom', topBottomMargin);
+    return bounds;
   }
 
   renderFile (d3el, filename) {

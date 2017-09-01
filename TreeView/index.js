@@ -82,6 +82,7 @@ class TreeView extends View {
   }
 
   draw (d3el) {
+    let self = this;
     if (!this.visibleNodes) {
       // draw got called before initVisibleNodes; try again after a timeout
       window.setTimeout(() => { this.render(); }, 100);
@@ -104,9 +105,12 @@ class TreeView extends View {
     let nodesEnter = nodes.enter().append('g').classed('node', true);
     nodes = nodesEnter.merge(nodes);
 
+    // Draw the background of each row... but we need to know the width before we can size it
+    nodesEnter.append('rect').classed('background', true);
+
     // Call the subclass draw functions and figure out how much space we need
     nodesEnter.append('g').classed('content', true);
-    let self = this;
+
     let bounds = {
       width: 0,
       height: 0
@@ -117,6 +121,20 @@ class TreeView extends View {
       bounds.width = Math.max(bounds.width, rowWidth);
     });
     bounds.height = (nodes.size()) * this.rowSize;
+
+    let containerBounds = d3el.node().getBoundingClientRect();
+    bounds = {
+      width: Math.max(bounds.width, containerBounds.width - this.scrollBarSize - 2),
+      height: Math.max(bounds.height, containerBounds.height - this.scrollBarSize)
+    };
+
+    // Now we know how to size the background
+    nodes.select('.background')
+      .attr('width', bounds.width)
+      .attr('height', this.rowSize - 2)
+      .attr('transform', d => {
+        return 'translate(' + (-(d.depth + 1.5) * this.rowSize) + ', ' + (-this.rowSize / 2 + 1) + ')';
+      });
 
     // Hide and then remove the exiting nodes
     nodesExit
@@ -136,6 +154,14 @@ class TreeView extends View {
     nodes.select('.arrow')
       .style('display', d => this.isLeaf(d.node) ? 'none' : null)
       .on('click', (d, i) => {
+        // TODO: This is an incredibly stupid bug that's out of my hands until
+        // webpack figures out WTF they're doing with esnext vs jsnext:main vs whatever,
+        // or if Mike Bostock decides to change the d3 API such that the imported event
+        // object no longer needs to be mutable...
+        // See this issue: https://github.com/d3/d3-selection/pull/125
+        // as well as this issue: https://github.com/webpack/webpack/issues/1979
+        // TL;DR: try d3.event instead of window.d3.event at some point in the future?
+        window.d3.event.stopPropagation();
         if (!this.isLeaf(d.node)) {
           if (d.numVisibleDescendants > 0) {
             this.collapse(i).catch(err => { throw err; });
@@ -158,22 +184,9 @@ class TreeView extends View {
       .attr('transform', (d, i) => {
         return 'translate(' + ((d.depth + 1.5) * this.rowSize) + ',' + ((i + 0.5) * this.rowSize) + ')';
       });
-    let containerBounds = d3el.node().getBoundingClientRect();
-    bounds = {
-      width: Math.max(bounds.width, containerBounds.width - this.scrollBarSize),
-      height: Math.max(bounds.height, containerBounds.height - this.scrollBarSize)
-    };
     svg.transition(t2)
       .attr('width', bounds.width)
       .attr('height', bounds.height);
-
-    // Draw the lines at the bottom of each row now that we know the width
-    nodesEnter.append('path').classed('underline', true);
-    nodes.select('.underline')
-      .attr('d', 'M0,0L' + bounds.width + ',0')
-      .attr('transform', d => {
-        return 'translate(-' + (d.depth + 1.5) * this.rowSize + ', ' + (this.rowSize / 2) + ')';
-      });
 
     // Initialize and fade in new rows
     nodesEnter

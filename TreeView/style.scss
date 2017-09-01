@@ -3,7 +3,7 @@
 .treeView {
   overflow: auto;
   border: 1px solid $separatorColor;
-  background-color: $pageBackground;
+  background-color: $separatorColor;
   border-radius: 0.5em;
 
   #normalGradient {
@@ -57,8 +57,8 @@
       fill: $textColor;
     }
 
-    .underline {
-      stroke: $separatorColor;
+    .background {
+      fill: $pageBackground;
     }
   }
 }
