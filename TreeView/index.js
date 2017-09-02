@@ -4,13 +4,14 @@ import template from './template.html';
 import './style.scss';
 
 class TreeView extends View {
-  constructor () {
+  constructor (relay) {
     super();
+    this.relay = relay;
 
     this.requireProperties(['getChildren', 'isLeaf', 'drawNode']);
 
     this.nextRowId = 0;
-    this.initVisibleNodes().catch(err => { throw err; });
+    this.initRows().catch(err => { throw err; });
   }
 
   createRow (node, depth) {
@@ -24,36 +25,36 @@ class TreeView extends View {
     };
   }
 
-  async initVisibleNodes () {
-    this.visibleNodes = (await this.getChildren(null)).map(node => {
+  async initRows () {
+    this.nodes = (await this.getChildren(null)).map(node => {
       return this.createRow(node);
     });
-    return this.visibleNodes;
+    return this.nodes;
   }
 
   parentIndex (index) {
-    let row = this.visibleNodes[index];
+    let row = this.nodes[index];
     let testIndex = index - 1;
-    while (testIndex >= 0 && this.visibleNodes[testIndex].depth >= row.depth) {
+    while (testIndex >= 0 && this.nodes[testIndex].depth >= row.depth) {
       testIndex -= 1;
     }
     return testIndex;
   }
 
   async expand (index) {
-    let row = this.visibleNodes[index];
+    let row = this.nodes[index];
     if (row.numVisibleDescendants > 0) {
       throw new Error('Row already expanded');
     }
     let nodesToAdd = (await this.getChildren(row.node)).map(node => {
       return this.createRow(node, row.depth + 1);
     });
-    this.visibleNodes = this.visibleNodes.slice(0, index + 1)
+    this.nodes = this.nodes.slice(0, index + 1)
       .concat(nodesToAdd)
-      .concat(this.visibleNodes.slice(index + 1));
+      .concat(this.nodes.slice(index + 1));
     let indexToIncrement = index;
     while (indexToIncrement >= 0) {
-      this.visibleNodes[indexToIncrement].numVisibleDescendants += nodesToAdd.length;
+      this.nodes[indexToIncrement].numVisibleDescendants += nodesToAdd.length;
       indexToIncrement = this.parentIndex(indexToIncrement);
     }
     this.render();
@@ -61,16 +62,41 @@ class TreeView extends View {
   }
 
   async collapse (index) {
-    let row = this.visibleNodes[index];
+    let row = this.nodes[index];
     let descendantCount = row.numVisibleDescendants;
-    let removedDescendants = this.visibleNodes.splice(index + 1, descendantCount);
+    let removedDescendants = this.nodes.splice(index + 1, descendantCount);
     let indexToDecrement = index;
     while (indexToDecrement >= 0) {
-      this.visibleNodes[indexToDecrement].numVisibleDescendants -= descendantCount;
+      this.nodes[indexToDecrement].numVisibleDescendants -= descendantCount;
       indexToDecrement = this.parentIndex(indexToDecrement);
     }
     this.render();
     return Promise.resolve(removedDescendants);
+  }
+
+  getVisibleRows (d3el) {
+    let containerBounds = d3el.node().getBoundingClientRect();
+    let containerScrollTop = d3el.node().scrollTop;
+    let svg = d3el.select('svg.hierarchy');
+    let aRow = svg.select('.node').node();
+    if (!aRow) {
+      return [];
+    }
+    let rowBounds = aRow.getBoundingClientRect();
+    let firstIndex = Math.floor(containerScrollTop / rowBounds.height);
+    firstIndex = Math.min(Math.max(0, firstIndex), this.nodes.length);
+    let lastIndex = Math.ceil((containerScrollTop + containerBounds.height) / rowBounds.height);
+    lastIndex = Math.min(Math.max(0, lastIndex), this.nodes.length);
+
+    let rows = [];
+    let selector = '.node:nth-child(n+' + (firstIndex + 1) + '):nth-child(-n+' + (lastIndex + 1) + ')';
+    d3.selectAll(selector).each(function (d, i) {
+      rows.push({
+        index: i,
+        y: this.getBoundingClientRect().top - containerBounds.top
+      });
+    });
+    return rows;
   }
 
   setup (d3el) {
@@ -83,8 +109,8 @@ class TreeView extends View {
 
   draw (d3el) {
     let self = this;
-    if (!this.visibleNodes) {
-      // draw got called before initVisibleNodes; try again after a timeout
+    if (!this.nodes) {
+      // draw got called before initRows; try again after a timeout
       window.setTimeout(() => { this.render(); }, 100);
       return;
     }
@@ -99,8 +125,8 @@ class TreeView extends View {
       .duration(500);
 
     // Initial setup of selections
-    let svg = d3el.select('svg');
-    let nodes = svg.selectAll('.node').data(this.visibleNodes, d => d.id);
+    let svg = d3el.select('svg.hierarchy');
+    let nodes = svg.selectAll('.node').data(this.nodes, d => d.id);
     let nodesExit = nodes.exit();
     let nodesEnter = nodes.enter().append('g').classed('node', true);
     nodes = nodesEnter.merge(nodes);

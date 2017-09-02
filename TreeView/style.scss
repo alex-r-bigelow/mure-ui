@@ -1,64 +1,71 @@
 @import '../style/colors.scss';
 
 .treeView {
-  overflow: auto;
+  position: relative;
   border: 1px solid $separatorColor;
   background-color: $separatorColor;
   border-radius: 0.5em;
 
-  #normalGradient {
-    .stop1 {
-      stop-color: desaturate($lightAccentColor,10);
-    }
-    .stop2 {
-      stop-color: desaturate($accentColor,30);
-    }
-    .stop3 {
-      stop-color: desaturate($darkAccentColor,10);
-    }
-  }
-  #hoverGradient {
-    .stop1 {
-      stop-color: $lightAccentColor;
-    }
-    .stop2 {
-      stop-color: $accentColor;
-    }
-    .stop3 {
-      stop-color: $darkAccentColor;
-    }
-  }
-  #activeGradient {
-    .stop1 {
-      stop-color: $darkAccentColor;
-    }
-    .stop2 {
-      stop-color: $accentColor;
-    }
-    .stop3 {
-      stop-color: $lightAccentColor;
-    }
-  }
+  .hierarchyContainer {
+    position: absolute;
+    overflow: auto;
+    width: 100%;
+    height: 100%;
 
-  .node {
-    .arrow {
-      cursor: pointer;
-      fill: url(#normalGradient);
-      stroke: black;
-      &:hover {
-        fill: url(#hoverGradient);
+    #normalGradient {
+      .stop1 {
+        stop-color: desaturate($lightAccentColor,10);
       }
-      &:active {
-        fill: url(#activeGradient);
+      .stop2 {
+        stop-color: desaturate($accentColor,30);
+      }
+      .stop3 {
+        stop-color: desaturate($darkAccentColor,10);
+      }
+    }
+    #hoverGradient {
+      .stop1 {
+        stop-color: $lightAccentColor;
+      }
+      .stop2 {
+        stop-color: $accentColor;
+      }
+      .stop3 {
+        stop-color: $darkAccentColor;
+      }
+    }
+    #activeGradient {
+      .stop1 {
+        stop-color: $darkAccentColor;
+      }
+      .stop2 {
+        stop-color: $accentColor;
+      }
+      .stop3 {
+        stop-color: $lightAccentColor;
       }
     }
 
-    text {
-      fill: $textColor;
-    }
+    .node {
+      .arrow {
+        cursor: pointer;
+        fill: url(#normalGradient);
+        stroke: black;
+        &:hover {
+          fill: url(#hoverGradient);
+        }
+        &:active {
+          fill: url(#activeGradient);
+        }
+      }
 
-    .background {
-      fill: $pageBackground;
+      text {
+        fill: $textColor;
+      }
+
+      .background {
+        fill: $pageBackground;
+      }
     }
   }
 }
