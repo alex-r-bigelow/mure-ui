@@ -34,13 +34,13 @@ $LightBrown: #F1E2CC;
 Color meanings:
 */
 
-$pageBackground: darken($DarkPurple, 45%);
 $textColor: $LightPurple;
 $separatorColor: $DarkGrey;
 
 $panelColor: $DarkPurple;
 $lightPanelColor: $LightPurple;
 $darkPanelColor: darken($panelColor, 30%);
+$darkestPanelColor: darken($panelColor, 45%);
 
 $accentColor: $DarkYellow;
 $lightAccentColor: $LightYellow;
@@ -53,18 +53,16 @@ $interactionColor: $DarkPink;
 /*
 Gradients:
 */
-$backgroundGradient: linear-gradient(-100deg, desaturate($darkPanelColor,15) 0%, desaturate($darkPanelColor,20) 23%, desaturate($pageBackground,20) 100%);
+$backgroundGradient: linear-gradient(-100deg, desaturate($darkPanelColor,15) 0%, desaturate($darkPanelColor,20) 23%, desaturate($darkestPanelColor,20) 100%);
 
 $lightGradientStops: rgba(desaturate($lightPanelColor,10),0.1) 0%,rgba(desaturate($panelColor,10),0) 40%,rgba(desaturate($darkPanelColor,10),0.1) 100%;
 $lightHoverGradientStops: rgba(desaturate($lightPanelColor,10),0.5) 0%,rgba(desaturate($panelColor,10),0.25) 40%,rgba(desaturate($darkPanelColor,10),1) 100%;
 $lightActiveGradientStops: rgba(desaturate($darkPanelColor,10),1) 0%,rgba(desaturate($panelColor,10),0.25) 40%,rgba(desaturate($lightPanelColor,10),0.5) 100%;
+
+$mediumGradientStops: rgba(desaturate($lightAccentColor,35),0.5) 0%, rgba(desaturate($accentColor,55),0.5) 40%, rgba(desaturate($darkAccentColor,35),0.5) 100%;
+$mediumHoverGradientStops: rgba(desaturate($lightAccentColor,25), 0.5) 0%, rgba(desaturate($accentColor,25), 0.5) 40%, rgba(desaturate($darkAccentColor,25), 0.5) 100%;
+$mediumActiveGradientStops: rgba(desaturate($darkAccentColor,25), 0.5) 0%, rgba(desaturate($accentColor,25), 0.5) 40%, rgba(desaturate($lightAccentColor,25), 0.5) 100%;
+
 $strongGradientStops: desaturate($lightAccentColor,10) 0%, desaturate($accentColor,30) 40%, desaturate($darkAccentColor,10) 100%;
 $strongHoverGradientStops: $lightAccentColor 0%, $accentColor 40%, $darkAccentColor 100%;
 $strongActiveGradientStops: $darkAccentColor 0%, $accentColor 40%, $lightAccentColor 100%;
-
-$buttonGradient: linear-gradient(to bottom, $lightGradientStops);
-$buttonHoverGradient: linear-gradient(to bottom, $lightHoverGradientStops);
-$buttonActiveGradient: linear-gradient(to bottom, $lightActiveGradientStops);
-$selectedButtonGradient: linear-gradient(to bottom, $strongGradientStops);
-$selectedButtonHoverGradient: linear-gradient(to bottom, $strongHoverGradientStops);
-$selectedButtonActiveGradient: linear-gradient(to bottom, $strongActiveGradientStops);

@@ -34,21 +34,21 @@
   }
 }
 ::-webkit-scrollbar-thumb:horizontal {
-  background: linear-gradient(to bottom, $strongGradientStops);
+  background: linear-gradient(to bottom, $mediumGradientStops);
   &:hover {
-    background: linear-gradient(to bottom, $strongHoverGradientStops);
+    background: linear-gradient(to bottom, $mediumHoverGradientStops);
   }
   &:active {
-    background: linear-gradient(to bottom, $strongActiveGradientStops);
+    background: linear-gradient(to bottom, $mediumActiveGradientStops);
   }
 }
 ::-webkit-scrollbar-thumb:vertical {
-  background: linear-gradient(to right, $strongGradientStops);
+  background: linear-gradient(to right, $mediumGradientStops);
   &:hover {
-    background: linear-gradient(to right, $strongHoverGradientStops);
+    background: linear-gradient(to right, $mediumHoverGradientStops);
   }
   &:active {
-    background: linear-gradient(to right, $strongActiveGradientStops);
+    background: linear-gradient(to right, $mediumActiveGradientStops);
   }
 }
 ::-webkit-scrollbar-thumb:horizontal:window-inactive {

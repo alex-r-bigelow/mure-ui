@@ -2,6 +2,13 @@
 @import '../ImgColorFilters/style.scss';
 @import './measurements.scss';
 
+$buttonGradient: linear-gradient(to bottom, $lightGradientStops);
+$buttonHoverGradient: linear-gradient(to bottom, $lightHoverGradientStops);
+$buttonActiveGradient: linear-gradient(to bottom, $lightActiveGradientStops);
+$selectedButtonGradient: linear-gradient(to bottom, $strongGradientStops);
+$selectedButtonHoverGradient: linear-gradient(to bottom, $strongHoverGradientStops);
+$selectedButtonActiveGradient: linear-gradient(to bottom, $strongActiveGradientStops);
+
 .button {
   position: relative;
   width: $buttonSize;

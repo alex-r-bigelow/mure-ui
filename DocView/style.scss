@@ -2,8 +2,8 @@
 
 .docView {
   overflow: auto;
-  border: 1px solid $separatorColor;
-  background-color: $pageBackground;
+  border: 1px solid $darkestPanelColor;
+  background-color: $darkestPanelColor;
   border-radius: 0.5em;
 
   iframe {

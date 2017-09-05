@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import debounce from 'debounce';
 import { View } from 'uki';
 import template from './template.html';
 import './style.scss';
@@ -12,6 +13,8 @@ class TreeView extends View {
 
     this.nextRowId = 0;
     this.initRows().catch(err => { throw err; });
+
+    this.expandedIndex = null;
   }
 
   createRow (node, depth) {
@@ -57,6 +60,7 @@ class TreeView extends View {
       this.nodes[indexToIncrement].numVisibleDescendants += nodesToAdd.length;
       indexToIncrement = this.parentIndex(indexToIncrement);
     }
+    this.expandedIndex = index;
     this.render();
     return nodesToAdd;
   }
@@ -70,33 +74,67 @@ class TreeView extends View {
       this.nodes[indexToDecrement].numVisibleDescendants -= descendantCount;
       indexToDecrement = this.parentIndex(indexToDecrement);
     }
+    this.expandedIndex = index;
     this.render();
     return Promise.resolve(removedDescendants);
   }
 
+  indexToDomNode (d3el, index) {
+    return d3el.select('.hierarchyContainer')
+      .select('.node:nth-child(n+' + (index + 2) + ')').node(); // nth-child counts from 1 instead of 0
+  }
+
   getVisibleRows (d3el) {
-    let containerBounds = d3el.node().getBoundingClientRect();
-    let containerScrollTop = d3el.node().scrollTop;
-    let svg = d3el.select('svg.hierarchy');
-    let aRow = svg.select('.node').node();
-    if (!aRow) {
+    if (!this.nodes) {
       return [];
     }
-    let rowBounds = aRow.getBoundingClientRect();
-    let firstIndex = Math.floor(containerScrollTop / rowBounds.height);
-    firstIndex = Math.min(Math.max(0, firstIndex), this.nodes.length);
-    let lastIndex = Math.ceil((containerScrollTop + containerBounds.height) / rowBounds.height);
-    lastIndex = Math.min(Math.max(0, lastIndex), this.nodes.length);
+    let container = d3el.select('.hierarchyContainer').node();
+    let containerBounds = container.getBoundingClientRect();
+    this.lastScrollTop = this.scrollTop;
+    this.scrollTop = container.scrollTop;
+    let firstIndex = Math.floor(this.scrollTop / this.rowSize);
+    firstIndex = Math.min(Math.max(0, firstIndex), this.nodes.length - 1);
+    let lastIndex = Math.ceil((this.scrollTop + containerBounds.height) / this.rowSize);
+    lastIndex = Math.min(Math.max(firstIndex, lastIndex), this.nodes.length - 1);
 
-    let rows = [];
-    let selector = '.node:nth-child(n+' + (firstIndex + 1) + '):nth-child(-n+' + (lastIndex + 1) + ')';
-    d3.selectAll(selector).each(function (d, i) {
-      rows.push({
-        index: i,
-        y: this.getBoundingClientRect().top - containerBounds.top
-      });
+    let offset = 0;
+    let firstNode = this.indexToDomNode(d3el, firstIndex);
+    if (firstNode) {
+      offset = firstNode.getBoundingClientRect().top - containerBounds.top;
+    }
+
+    let startY, endY;
+    if (this.expandedIndex !== null) {
+      // we just expanded / collapsed a node, so the parent index is where we want
+      // nodes to start from / go to
+      startY = endY = offset + (this.expandedIndex - firstIndex) * this.rowSize;
+    } else {
+      // we just scrolled...
+      let scrolledDown = true;
+      if (this.lastScrollTop !== undefined) {
+        scrolledDown = this.scrollTop - this.lastScrollTop >= 0;
+      }
+      let top = -this.rowSize;
+      let bottom = containerBounds.bottom + this.rowSize;
+      if (scrolledDown) {
+        startY = bottom;
+        endY = top;
+      } else {
+        startY = top;
+        endY = bottom;
+      }
+    }
+
+    return new Array(lastIndex + 1 - firstIndex).fill().map((d, i) => {
+      return {
+        visibleIndex: i,
+        actualIndex: i + firstIndex,
+        node: this.nodes[i + firstIndex],
+        y: offset + i * this.rowSize,
+        startY,
+        endY
+      };
     });
-    return rows;
   }
 
   setup (d3el) {
@@ -105,6 +143,14 @@ class TreeView extends View {
     // We set this here and use a distinct variable so it's easy for subclasses
     // to adjust the row size
     this.rowSize = 1.5 * this.emSize;
+
+    d3el.select('.hierarchyContainer').on('scroll', debounce(() => {
+      this.expandedIndex = null;
+      this.drawConnectors(d3el, this.getVisibleRows(d3el));
+      this.relay.trigger('changeVisibleConnectors');
+    }), 10000);
+    d3el.append('div').classed('connectorContainer', true)
+      .append('svg').classed('connectors', true);
   }
 
   draw (d3el) {
@@ -148,7 +194,7 @@ class TreeView extends View {
     });
     bounds.height = (nodes.size()) * this.rowSize;
 
-    let containerBounds = d3el.node().getBoundingClientRect();
+    let containerBounds = d3el.select('.hierarchyContainer').node().getBoundingClientRect();
     bounds = {
       width: Math.max(bounds.width, containerBounds.width - this.scrollBarSize - 2),
       height: Math.max(bounds.height, containerBounds.height - this.scrollBarSize)
@@ -156,10 +202,10 @@ class TreeView extends View {
 
     // Now we know how to size the background
     nodes.select('.background')
-      .attr('width', bounds.width)
+      .attr('width', bounds.width - 2)
       .attr('height', this.rowSize - 2)
       .attr('transform', d => {
-        return 'translate(' + (-(d.depth + 1.5) * this.rowSize) + ', ' + (-this.rowSize / 2 + 1) + ')';
+        return 'translate(' + (-(d.depth + 1.5) * this.rowSize + 2) + ', ' + (-this.rowSize / 2 + 1) + ')';
       });
 
     // Hide and then remove the exiting nodes
@@ -221,6 +267,45 @@ class TreeView extends View {
       })
       .attr('opacity', 0)
       .transition(t3)
+      .attr('opacity', 1);
+
+    // Draw the connector section and dots
+    this.drawConnectors(d3el, this.getVisibleRows(d3el), t3);
+  }
+  drawConnectors (d3el, indices, t) {
+    t = t || d3.transition()
+      .duration(500);
+
+    let containerBounds = d3el.select('.connectorContainer')
+      .node().getBoundingClientRect();
+    let svg = d3el.select('svg.connectors')
+      .attr('width', containerBounds.width)
+      .attr('height', containerBounds.height);
+
+    let connectors = svg.selectAll('.connector').data(indices, d => d.node.id);
+    connectors.exit()
+      .transition(t)
+      .attr('transform', d => {
+        return 'translate(' + (this.emSize / 2) + ',' + (d.endY + this.rowSize / 2) + ')';
+      })
+      .attr('opacity', 0)
+      .remove();
+    let connectorsEnter = connectors.enter().append('g')
+      .classed('connector', true)
+      .attr('transform', d => {
+        return 'translate(' + (this.emSize / 2) + ',' + (d.startY + this.rowSize / 2) + ')';
+      })
+      .attr('opacity', 0);
+    connectors = connectorsEnter.merge(connectors);
+
+    connectorsEnter.append('circle')
+      .attr('r', this.emSize / 2);
+    connectors.on('click', d => {
+      console.log(d);
+      console.log(this.indexToDomNode(d3el, d.actualIndex));
+    }).transition(t)
+      .attr('transform', d => 'translate(' +
+        (this.emSize / 2) + ',' + (d.y + this.rowSize / 2) + ')')
       .attr('opacity', 1);
   }
 }

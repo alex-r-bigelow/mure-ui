@@ -1,9 +1,10 @@
 @import '../style/colors.scss';
+@import '../style/measurements.scss';
 
 .treeView {
   position: relative;
-  border: 1px solid $separatorColor;
-  background-color: $separatorColor;
+  border: 1px solid $darkestPanelColor;
+  background-color: $darkestPanelColor;
   border-radius: 0.5em;
 
   .hierarchyContainer {
@@ -50,7 +51,7 @@
       .arrow {
         cursor: pointer;
         fill: url(#normalGradient);
-        stroke: black;
+        stroke: $darkestPanelColor;
         &:hover {
           fill: url(#hoverGradient);
         }
@@ -64,7 +65,28 @@
       }
 
       .background {
-        fill: $pageBackground;
+        fill: $darkPanelColor;
+        rx: $borderRadius;
+        ry: $borderRadius;
+        stroke-width: 1px;
+        stroke: transparent;
+      }
+    }
+  }
+  .connectorContainer {
+    display: none; /* by default, the connectors are hidden / unused... subclasses use them */
+
+    .connector {
+      circle {
+        cursor: pointer;
+        fill: url(#normalGradient90);
+        stroke: $darkestPanelColor;
+        &:hover {
+          fill: url(#hoverGradient90);
+        }
+        &:active {
+          fill: url(#activeGradient90);
+        }
       }
     }
   }
