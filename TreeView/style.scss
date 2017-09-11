@@ -13,58 +13,12 @@
     width: 100%;
     height: 100%;
 
-    #normalGradient {
-      .stop1 {
-        stop-color: desaturate($lightAccentColor,10);
-      }
-      .stop2 {
-        stop-color: desaturate($accentColor,30);
-      }
-      .stop3 {
-        stop-color: desaturate($darkAccentColor,10);
-      }
-    }
-    #hoverGradient {
-      .stop1 {
-        stop-color: $lightAccentColor;
-      }
-      .stop2 {
-        stop-color: $accentColor;
-      }
-      .stop3 {
-        stop-color: $darkAccentColor;
-      }
-    }
-    #activeGradient {
-      .stop1 {
-        stop-color: $darkAccentColor;
-      }
-      .stop2 {
-        stop-color: $accentColor;
-      }
-      .stop3 {
-        stop-color: $lightAccentColor;
-      }
-    }
-
     .node {
-      .arrow {
-        cursor: pointer;
-        fill: url(#normalGradient);
-        stroke: $darkestPanelColor;
-        &:hover {
-          fill: url(#hoverGradient);
-        }
-        &:active {
-          fill: url(#activeGradient);
-        }
-      }
-
       text {
         fill: $textColor;
       }
 
-      .background {
+      & > .background {
         fill: $darkPanelColor;
         rx: $borderRadius;
         ry: $borderRadius;
@@ -73,21 +27,7 @@
       }
     }
   }
-  .connectorContainer {
-    display: none; /* by default, the connectors are hidden / unused... subclasses use them */
-
-    .connector {
-      circle {
-        cursor: pointer;
-        fill: url(#normalGradient90);
-        stroke: $darkestPanelColor;
-        &:hover {
-          fill: url(#hoverGradient90);
-        }
-        &:active {
-          fill: url(#activeGradient90);
-        }
-      }
-    }
+  .indicatorContainer {
+    display: none; /* by default, the indicators are hidden / unused... subclasses use them */
   }
 }

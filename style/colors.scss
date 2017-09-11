@@ -55,14 +55,41 @@ Gradients:
 */
 $backgroundGradient: linear-gradient(-100deg, desaturate($darkPanelColor,15) 0%, desaturate($darkPanelColor,20) 23%, desaturate($darkestPanelColor,20) 100%);
 
-$lightGradientStops: rgba(desaturate($lightPanelColor,10),0.1) 0%,rgba(desaturate($panelColor,10),0) 40%,rgba(desaturate($darkPanelColor,10),0.1) 100%;
-$lightHoverGradientStops: rgba(desaturate($lightPanelColor,10),0.5) 0%,rgba(desaturate($panelColor,10),0.25) 40%,rgba(desaturate($darkPanelColor,10),1) 100%;
-$lightActiveGradientStops: rgba(desaturate($darkPanelColor,10),1) 0%,rgba(desaturate($panelColor,10),0.25) 40%,rgba(desaturate($lightPanelColor,10),0.5) 100%;
+$lightGradientStop1: rgba(desaturate($lightPanelColor,10),0.1);
+$lightGradientStop2: rgba(desaturate($panelColor,10),0);
+$lightGradientStop3: rgba(desaturate($darkPanelColor,10),0.1);
+$lightGradientStops: $lightGradientStop1 0%,$lightGradientStop2 40%,$lightGradientStop3 100%;
+$lightHoverGradientStop1: rgba(desaturate($lightPanelColor,10),0.5);
+$lightHoverGradientStop2: rgba(desaturate($panelColor,10),0.25);
+$lightHoverGradientStop3: rgba(desaturate($darkPanelColor,10),1);
+$lightHoverGradientStops: $lightHoverGradientStop1 0%,$lightHoverGradientStop2 40%,$lightHoverGradientStop3 100%;
+$lightActiveGradientStop1: rgba(desaturate($darkPanelColor,10),1);
+$lightActiveGradientStop2: rgba(desaturate($panelColor,10),0.25);
+$lightActiveGradientStop3: rgba(desaturate($lightPanelColor,10),0.5);
+$lightActiveGradientStops: $lightActiveGradientStop1 0%,$lightActiveGradientStop2 40%,$lightActiveGradientStop3 100%;
 
-$mediumGradientStops: rgba(desaturate($lightAccentColor,35),0.5) 0%, rgba(desaturate($accentColor,55),0.5) 40%, rgba(desaturate($darkAccentColor,35),0.5) 100%;
-$mediumHoverGradientStops: rgba(desaturate($lightAccentColor,25), 0.5) 0%, rgba(desaturate($accentColor,25), 0.5) 40%, rgba(desaturate($darkAccentColor,25), 0.5) 100%;
-$mediumActiveGradientStops: rgba(desaturate($darkAccentColor,25), 0.5) 0%, rgba(desaturate($accentColor,25), 0.5) 40%, rgba(desaturate($lightAccentColor,25), 0.5) 100%;
+$mediumGradientStop1: rgba(desaturate($lightAccentColor,35),0.5);
+$mediumGradientStop2: rgba(desaturate($accentColor,55),0.5);
+$mediumGradientStop3: rgba(desaturate($darkAccentColor,35),0.5);
+$mediumGradientStops: $mediumGradientStop1 0%, $mediumGradientStop2 40%, $mediumGradientStop3 100%;
+$mediumHoverGradientStop1: rgba(desaturate($lightAccentColor,25), 0.5);
+$mediumHoverGradientStop2: rgba(desaturate($accentColor,25), 0.5);
+$mediumHoverGradientStop3: rgba(desaturate($darkAccentColor,25), 0.5);
+$mediumHoverGradientStops: $mediumHoverGradientStop1 0%, $mediumHoverGradientStop2 40%, $mediumHoverGradientStop3 100%;
+$mediumActiveGradientStop1: rgba(desaturate($darkAccentColor,25), 0.5);
+$mediumActiveGradientStop2: rgba(desaturate($accentColor,25), 0.5);
+$mediumActiveGradientStop3: rgba(desaturate($lightAccentColor,25), 0.5);
+$mediumActiveGradientStops: $mediumActiveGradientStop1 0%, $mediumActiveGradientStop2 40%, $mediumActiveGradientStop3 100%;
 
-$strongGradientStops: desaturate($lightAccentColor,10) 0%, desaturate($accentColor,30) 40%, desaturate($darkAccentColor,10) 100%;
-$strongHoverGradientStops: $lightAccentColor 0%, $accentColor 40%, $darkAccentColor 100%;
-$strongActiveGradientStops: $darkAccentColor 0%, $accentColor 40%, $lightAccentColor 100%;
+$strongGradientStop1: desaturate($lightAccentColor,10);
+$strongGradientStop2: desaturate($accentColor,30);
+$strongGradientStop3: desaturate($darkAccentColor,10);
+$strongGradientStops: $strongGradientStop1 0%, $strongGradientStop2 40%, $strongGradientStop3 100%;
+$strongHoverGradientStop1: $lightAccentColor;
+$strongHoverGradientStop2: $accentColor;
+$strongHoverGradientStop3: $darkAccentColor;
+$strongHoverGradientStops: $strongHoverGradientStop1 0%, $strongHoverGradientStop2 40%, $strongHoverGradientStop3 100%;
+$strongActiveGradientStop1: $darkAccentColor;
+$strongActiveGradientStop2: $accentColor;
+$strongActiveGradientStop3: $lightAccentColor;
+$strongActiveGradientStops: $strongActiveGradientStop1 0%, $strongActiveGradientStop2 40%, $strongActiveGradientStop3 100%;

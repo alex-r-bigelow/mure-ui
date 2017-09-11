@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import mure from 'mure';
+import applySvgButtonColors from '../svgButtons/index.js';
 import debounce from 'debounce';
 import { View } from 'uki';
 import template from './template.html';
@@ -156,13 +157,15 @@ class TreeView extends View {
 
     d3el.select('.hierarchyContainer').on('scroll', debounce(() => {
       this.expandedIndex = null;
-      this.drawConnectors(d3el, this.getVisibleRows(d3el));
+      this.drawIndicators(d3el, this.getVisibleRows(d3el));
       if (this.relay) {
-        this.relay.trigger('changeVisibleConnectors');
+        this.relay.trigger('changeVisibleIndicators');
       }
     }), 10000);
-    d3el.append('div').classed('connectorContainer', true)
-      .append('svg').classed('connectors', true);
+    d3el.append('div').classed('indicatorContainer', true)
+      .append('svg').classed('indicators', true);
+
+    applySvgButtonColors();
   }
 
   draw (d3el) {
@@ -229,12 +232,15 @@ class TreeView extends View {
 
     // Draw the arrows and rotate them
     let arrowRadius = this.rowSize / 3;
-    nodesEnter.append('path')
+    nodesEnter.append('g')
       .classed('arrow', true)
+      .classed('button', true)
       .attr('transform', 'translate(-' + arrowRadius * 2 + ') rotate(0)')
-      .attr('d', 'M-' + arrowRadius + ',-' + arrowRadius +
-                 'Q' + (1.5 * arrowRadius) + ',0,' +
-                 '-' + arrowRadius + ',' + arrowRadius + 'Z');
+      .append('path')
+        .classed('background', true)
+        .attr('d', 'M-' + arrowRadius + ',-' + arrowRadius +
+                   'Q' + (1.5 * arrowRadius) + ',0,' +
+                   '-' + arrowRadius + ',' + arrowRadius + 'Z');
     nodes.select('.arrow')
       .style('display', d => this.isLeaf(d.node) ? 'none' : null)
       .on('click', (d, i) => {
@@ -281,44 +287,45 @@ class TreeView extends View {
       .transition(t3)
       .attr('opacity', 1);
 
-    // Draw the connector section and dots
-    this.drawConnectors(d3el, this.getVisibleRows(d3el), t3);
+    // Draw the indicator section and dots
+    this.drawIndicators(d3el, this.getVisibleRows(d3el), t3);
   }
-  drawConnectors (d3el, indices, t) {
+  drawIndicators (d3el, indices, t) {
+    let self = this;
     t = t || d3.transition()
       .duration(500);
 
-    let containerBounds = d3el.select('.connectorContainer')
+    let containerBounds = d3el.select('.indicatorContainer')
       .node().getBoundingClientRect();
-    let svg = d3el.select('svg.connectors')
+    let svg = d3el.select('svg.indicators')
       .attr('width', containerBounds.width)
       .attr('height', containerBounds.height);
 
-    let connectors = svg.selectAll('.connector').data(indices, d => d.row.id);
-    connectors.exit()
+    let indicators = svg.selectAll('.indicator').data(indices, d => d.row.id);
+    indicators.exit()
       .transition(t)
       .attr('transform', d => {
         return 'translate(' + (this.emSize / 2) + ',' + (d.endY + this.rowSize / 2) + ')';
       })
       .attr('opacity', 0)
       .remove();
-    let connectorsEnter = connectors.enter().append('g')
-      .classed('connector', true)
+    let indicatorsEnter = indicators.enter().append('g')
+      .classed('indicator', true)
       .attr('transform', d => {
         return 'translate(' + (this.emSize / 2) + ',' + (d.startY + this.rowSize / 2) + ')';
       })
       .attr('opacity', 0);
-    connectors = connectorsEnter.merge(connectors);
+    indicators = indicatorsEnter.merge(indicators);
 
-    connectorsEnter.append('circle')
-      .attr('r', this.emSize / 2);
-    connectors.on('click', d => {
-      console.log(d);
-      console.log(this.indexToDomNode(d3el, d.actualIndex));
+    indicators.each(function (d) {
+      self.drawIndicator(d3.select(this), d.row);
     }).transition(t)
       .attr('transform', d => 'translate(' +
         (this.emSize / 2) + ',' + (d.y + this.rowSize / 2) + ')')
       .attr('opacity', 1);
+  }
+  drawIndicator (d3el, row) {
+    // This is a stub; by default the indicator group is hidden
   }
 }
 

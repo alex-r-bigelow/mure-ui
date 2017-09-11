@@ -1,0 +1,88 @@
+@import '../style/colors.scss';
+@import '../style/measurements.scss';
+@import '../ImgColorFilters/style.scss';
+
+#svgButtonStyles {
+  #lightGradient {
+    .stop1 { stop-color: $lightGradientStop1; }
+    .stop2 { stop-color: $lightGradientStop2; }
+    .stop3 { stop-color: $lightGradientStop3; }
+  }
+  #lightHoverGradient {
+    .stop1 { stop-color: $lightHoverGradientStop1; }
+    .stop2 { stop-color: $lightHoverGradientStop2; }
+    .stop3 { stop-color: $lightHoverGradientStop3; }
+  }
+  #lightActiveGradient {
+    .stop1 { stop-color: $lightActiveGradientStop1; }
+    .stop2 { stop-color: $lightActiveGradientStop2; }
+    .stop3 { stop-color: $lightActiveGradientStop3; }
+  }
+  #mediumGradient {
+    .stop1 { stop-color: $mediumGradientStop1; }
+    .stop2 { stop-color: $mediumGradientStop2; }
+    .stop3 { stop-color: $mediumGradientStop3; }
+  }
+  #mediumHoverGradient {
+    .stop1 { stop-color: $mediumHoverGradientStop1; }
+    .stop2 { stop-color: $mediumHoverGradientStop2; }
+    .stop3 { stop-color: $mediumHoverGradientStop3; }
+  }
+  #mediumActiveGradient {
+    .stop1 { stop-color: $mediumActiveGradientStop1; }
+    .stop2 { stop-color: $mediumActiveGradientStop2; }
+    .stop3 { stop-color: $mediumActiveGradientStop3; }
+  }
+  #strongGradient {
+    .stop1 { stop-color: $strongGradientStop1; }
+    .stop2 { stop-color: $strongGradientStop2; }
+    .stop3 { stop-color: $strongGradientStop3; }
+  }
+  #strongHoverGradient {
+    .stop1 { stop-color: $strongHoverGradientStop1; }
+    .stop2 { stop-color: $strongHoverGradientStop2; }
+    .stop3 { stop-color: $strongHoverGradientStop3; }
+  }
+  #strongActiveGradient {
+    .stop1 { stop-color: $strongActiveGradientStop1; }
+    .stop2 { stop-color: $strongActiveGradientStop2; }
+    .stop3 { stop-color: $strongActiveGradientStop3; }
+  }
+}
+
+.button {
+  cursor: pointer;
+
+  .background {
+    stroke: $Black;
+    stroke-width: 1px;
+    rx: $borderRadius;
+    ry: $borderRadius;
+    fill: url(#lightGradient);
+  }
+
+  image {
+    filter: imgColorFilter($accentColor);
+  }
+  &:hover .background {
+    fill: url(#lightHoverGradient);
+  }
+  &:active .background {
+    fill: url(#lightActiveGradient);
+  }
+
+  &.selected {
+    .background {
+      fill: url(#strongGradient);
+    }
+    image {
+      filter: imgColorFilter($darkPanelColor);
+    }
+    &:hover .background {
+      fill: url(#strongHoverGradient);
+    }
+    &:active .background {
+      fill: url(#strongActiveGradient);
+    }
+  }
+}
