@@ -40,7 +40,7 @@ function applySvgButtonColors () {
   let stopsEnter = stops.enter().append('stop');
   stops = stopsEnter.merge(stops);
 
-  stops.attr('class', (d, i) => 'stop' + i)
+  stops.attr('class', (d, i) => 'stop' + (i + 1))
     .attr('offset', d => d);
 
   // updateImgColorFilters();
