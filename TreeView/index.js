@@ -96,6 +96,7 @@ class TreeView extends View {
   }
 
   getVisibleRows (d3el) {
+    d3el = d3el || this.d3el;
     if (!this.rows) {
       return [];
     }
