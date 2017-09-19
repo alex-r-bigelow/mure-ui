@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import mure from 'mure';
 import applySvgButtonColors from '../svgButtons/index.js';
 import debounce from 'debounce';
 import { View } from 'uki';
@@ -9,30 +8,15 @@ import './style.scss';
 class TreeView extends View {
   constructor () {
     super();
-
-    this.requireProperties(['getChildren', 'isLeaf', 'drawNode']);
-
-    this.nextRowId = 0;
+    this.requireProperties(['getChildren', 'isLeaf', 'drawNode', 'drawIndicator', 'getRowId', 'lookupBindingIndexFromRootId']);
     this.initRows().catch(err => { throw err; });
-
     this.expandedIndex = null;
-
-    mure.on('fileChange', () => {
-      (async () => {
-        await this.initRows();
-        this.render();
-      })().catch(this.catchDbError);
-    });
-    mure.on('fileSave', () => {
-      this.render();
-    });
   }
 
   createRow (node, depth) {
-    this.nextRowId += 1;
     return {
       node,
-      id: this.nextRowId,
+      id: this.getRowId(node),
       depth: depth || 0,
       isLeaf: this.isLeaf(node),
       numVisibleDescendants: 0
@@ -115,37 +99,39 @@ class TreeView extends View {
       offset = firstNode.getBoundingClientRect().top - containerBounds.top;
     }
 
-    let startY, endY;
-    if (this.expandedIndex !== null) {
-      // we just expanded / collapsed a node, so the parent index is where we want
-      // nodes to start from / go to
-      startY = endY = offset + (this.expandedIndex - firstIndex) * this.rowSize;
-    } else {
-      // we just scrolled...
-      let scrolledDown = true;
-      if (this.lastScrollTop !== undefined) {
-        scrolledDown = this.scrollTop - this.lastScrollTop >= 0;
-      }
-      let top = -this.rowSize;
-      let bottom = containerBounds.bottom + this.rowSize;
-      if (scrolledDown) {
-        startY = bottom;
-        endY = top;
-      } else {
-        startY = top;
-        endY = bottom;
-      }
+    let scrollDistance = 0;
+    if (this.lastScrollTop !== undefined) {
+      scrollDistance = this.scrollTop - this.lastScrollTop >= 0;
     }
 
+    let parentIndexToBindingIndex = {};
+
     return new Array(lastIndex - firstIndex).fill().map((d, i) => {
-      return {
-        visibleIndex: i,
-        actualIndex: i + firstIndex,
-        row: this.rows[i + firstIndex],
-        y: offset + i * this.rowSize,
-        startY,
-        endY
-      };
+      let rowCopy = Object.assign({}, this.rows[i + firstIndex]);
+      rowCopy.visibleIndex = i;
+      rowCopy.expansionIndex = i + firstIndex;
+      rowCopy.parentIndex = this.parentIndex(rowCopy.expansionIndex);
+      if (!parentIndexToBindingIndex[rowCopy.parentIndex]) {
+        let parentRow = this.rows[rowCopy.parentIndex];
+        if (!parentRow) {
+          parentIndexToBindingIndex[rowCopy.parentIndex] = null;
+        } else {
+          let bindingIndex = this.lookupBindingIndexFromRootId(parentRow.id);
+          parentIndexToBindingIndex[rowCopy.parentIndex] = bindingIndex;
+        }
+      }
+      rowCopy.bindingIndex = parentIndexToBindingIndex[rowCopy.parentIndex];
+      rowCopy.y = offset + i * this.rowSize;
+      rowCopy.globalY = containerBounds.top + rowCopy.y;
+      if (this.expandedIndex !== null) {
+        // we just expanded / collapsed a node, so the parent index is where we want
+        // nodes to start from / go to
+        rowCopy.startY = rowCopy.endY = offset + (rowCopy.parentIndex - firstIndex) * this.rowSize;
+      } else {
+        // we just scrolled...
+        rowCopy.startY = rowCopy.endY = rowCopy.y + scrollDistance;
+      }
+      return rowCopy;
     });
   }
 
@@ -302,7 +288,7 @@ class TreeView extends View {
       .attr('width', containerBounds.width)
       .attr('height', containerBounds.height);
 
-    let indicators = svg.selectAll('.indicator').data(indices, d => d.row.id);
+    let indicators = svg.selectAll('.indicator').data(indices, d => d.id);
     indicators.exit()
       .transition(t)
       .attr('transform', d => {
@@ -319,14 +305,11 @@ class TreeView extends View {
     indicators = indicatorsEnter.merge(indicators);
 
     indicators.each(function (d) {
-      self.drawIndicator(d3.select(this), d.row);
+      self.drawIndicator(d3.select(this), d);
     }).transition(t)
       .attr('transform', d => 'translate(' +
         (this.emSize / 2) + ',' + (d.y + this.rowSize / 2) + ')')
       .attr('opacity', 1);
-  }
-  drawIndicator (d3el, row) {
-    // This is a stub; by default the indicator group is hidden
   }
 }
 

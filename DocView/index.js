@@ -18,19 +18,19 @@ class DocView extends View {
       this.resizeIFrame(d3el);
     });
 
-    mure.on('fileChange', mureFile => {
-      this.renderFile(d3el, mureFile ? mureFile.filename : null);
+    mure.on('domChange', newBlob => {
+      this.renderFile(d3el, newBlob);
     });
   }
 
   draw (d3el) {
     // TODO: show a spinner
     (async () => {
-      let mureFile = await mure.getFile();
-      if (mureFile === null || this.lastFileRev !== mureFile._rev) {
-        await this.renderFile(d3el, mureFile.filename);
+      let currentFile = await mure.getFile(undefined, mure.CONTENT_FORMATS.blob);
+      if (currentFile === null || this.lastDigest !== currentFile._attachments[currentFile._id].digest) {
+        await this.renderFile(d3el, currentFile._attachments[currentFile._id].data);
       }
-      this.lastFileRev = mureFile ? mureFile._rev : null;
+      this.lastDigest = currentFile ? currentFile._attachments[currentFile._id].digest : null;
     })();
   }
 
@@ -76,12 +76,11 @@ class DocView extends View {
     return bounds;
   }
 
-  async renderFile (d3el, filename) {
-    let blob = filename ? await mure.getFileAsBlob(filename) : this.defaultBlob;
+  renderFile (d3el, newBlob) {
     let iframe = d3el.select('iframe');
     iframe.node().__suppressInteractivity__ = !this.enableInteractivity;
     // give the loaded SVG a way to know that it should suppress interactivity if we say so
-    iframe.attr('src', window.URL.createObjectURL(blob));
+    iframe.attr('src', window.URL.createObjectURL(newBlob));
     iframe.node().focus();
   }
 }
