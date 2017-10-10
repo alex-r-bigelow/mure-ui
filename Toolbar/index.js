@@ -50,7 +50,7 @@ class AppToolbar extends Toolbar {
   constructor () {
     super([]);
     this.menuData = this.buildAppMenu();
-    this.longPressTimeout;
+    this.longPressTimeout = null;
     this.longPressed = false;
   }
   toggleNewTabClass () {
@@ -109,7 +109,7 @@ class AppToolbar extends Toolbar {
             this.toggleNewTabClass();
           }
         },
-        label: appName === 'docs' ? 'Main app' : 'docs',
+        label: appName === 'docs' ? 'Main app' : appName,
         icon: mure.appList[appName].icon,
         selected: mure.currentApp === appName
       });
