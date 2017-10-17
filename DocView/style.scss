@@ -1,10 +1,8 @@
 @import '../style/colors.scss';
+@import '../style/ui.scss';
 
 .docView {
   overflow: auto;
-  border: 1px solid $darkestPanelColor;
-  background-color: $darkestPanelColor;
-  border-radius: 0.5em;
 
   iframe {
     position: absolute;

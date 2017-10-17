@@ -107,4 +107,40 @@ $selectedButtonActiveGradient: linear-gradient(to bottom, $strongActiveGradientS
       background: $selectedButtonActiveGradient;
     }
   }
+
+  &.small {
+    width: $smallButtonSize;
+    height: $smallButtonSize;
+    a img {
+      left: calc(#{$smallButtonSize / 2} - #{$smallButtonImageSize / 2});
+      top: calc(#{$smallButtonSize / 2} - #{$smallButtonImageSize / 2});
+      width: $smallButtonImageSize;
+      height: $smallButtonImageSize
+    }
+    &:hover label {
+      /* default position for label is on the bottom */
+      top: calc(#{$smallButtonSize} + 0.5em);
+      left: calc(#{$smallButtonSize / 2});
+      transform: translate(-50%, 0);
+
+      /* label positioning can also be overridden when the button is in a toolbar */
+      &.top {
+        bottom: calc(#{$smallButtonSize} + 0.5em);
+        top: auto;
+        left: calc(#{$smallButtonSize / 2});
+        transform: translate(-50%, 0);
+      }
+      &.right {
+        top: calc(#{$smallButtonSize / 2} - 0.9em);
+        left: calc(#{$smallButtonSize} + 0.5em);
+        transform: none;
+      }
+      &.left {
+        top: calc(#{$smallButtonSize / 2} - 0.9em);
+        right: calc(#{$smallButtonSize} + 0.5em);
+        left: auto;
+        transform: none;
+      }
+    }
+  }
 }
