@@ -27,7 +27,11 @@ class DocView extends View {
     // TODO: show a spinner
     (async () => {
       let currentFile = await mure.getFile(undefined, mure.CONTENT_FORMATS.blob);
-      if (currentFile === null || this.lastDigest !== currentFile._attachments[currentFile._id].digest) {
+      if (currentFile === null) {
+        if (this.lastDigest !== null) {
+          await this.renderFile(d3el, null);
+        }
+      } else if (this.lastDigest !== currentFile._attachments[currentFile._id].digest) {
         await this.renderFile(d3el, currentFile._attachments[currentFile._id].data);
       }
       this.lastDigest = currentFile ? currentFile._attachments[currentFile._id].digest : null;
@@ -80,7 +84,7 @@ class DocView extends View {
     let iframe = d3el.select('iframe');
     iframe.node().__suppressInteractivity__ = !this.enableInteractivity;
     // give the loaded SVG a way to know that it should suppress interactivity if we say so
-    iframe.attr('src', window.URL.createObjectURL(newBlob));
+    iframe.attr('src', window.URL.createObjectURL(newBlob || this.defaultBlob));
     iframe.node().focus();
   }
 }
