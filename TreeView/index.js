@@ -8,7 +8,7 @@ import './style.scss';
 class TreeView extends View {
   constructor () {
     super();
-    this.requireProperties(['getChildren', 'isLeaf', 'drawNode', 'drawIndicator', 'getRowId', 'lookupBindingIndexFromRootId']);
+    this.requireProperties(['getChildren', 'isLeaf', 'drawNode', 'drawIndicator', 'getRowId', 'lookupBindingIdsFromRootId']);
     this.initRows().catch(err => { throw err; });
     this.expandedIndex = null;
   }
@@ -116,11 +116,11 @@ class TreeView extends View {
         if (!parentRow) {
           parentIndexToBindingIndex[rowCopy.parentIndex] = null;
         } else {
-          let bindingIndex = this.lookupBindingIndexFromRootId(parentRow.id);
-          parentIndexToBindingIndex[rowCopy.parentIndex] = bindingIndex;
+          let bindingIds = this.lookupBindingIdsFromRootId(parentRow.id);
+          parentIndexToBindingIndex[rowCopy.parentIndex] = bindingIds;
         }
       }
-      rowCopy.bindingIndex = parentIndexToBindingIndex[rowCopy.parentIndex];
+      rowCopy.bindingIds = parentIndexToBindingIndex[rowCopy.parentIndex];
       rowCopy.y = offset + i * this.rowSize;
       rowCopy.globalY = containerBounds.top + rowCopy.y;
       if (this.expandedIndex !== null) {
